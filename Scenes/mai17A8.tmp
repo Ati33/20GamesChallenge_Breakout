@@ -1,0 +1,91 @@
+[gd_scene load_steps=10 format=3 uid="uid://dvxsuunp1l7a0"]
+
+[ext_resource type="PackedScene" uid="uid://bhv1d4huavdti" path="res://Scenes/paddle.tscn" id="1_ogjtp"]
+[ext_resource type="Script" path="res://Scenes/main.gd" id="1_wnbm8"]
+[ext_resource type="PackedScene" uid="uid://c75wqbfcprj1v" path="res://Scenes/ball.tscn" id="2_rvfku"]
+[ext_resource type="PackedScene" uid="uid://c1d7gpyycnjm8" path="res://Scenes/canvas_layer.tscn" id="4_b2pk6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hrqj7"]
+size = Vector2(20, 366)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g3b4d"]
+size = Vector2(20, 374)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_068ri"]
+size = Vector2(338.5, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f8ioj"]
+size = Vector2(340, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2icfi"]
+size = Vector2(269, 20)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_wnbm8")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="WallsAndCeiling" type="StaticBody2D" parent="."]
+
+[node name="RightWallCollision" type="CollisionShape2D" parent="WallsAndCeiling"]
+position = Vector2(135, -2)
+shape = SubResource("RectangleShape2D_hrqj7")
+
+[node name="RightWall" type="ColorRect" parent="WallsAndCeiling/RightWallCollision"]
+offset_left = -10.0
+offset_top = -181.0
+offset_right = 10.0
+offset_bottom = 182.0
+
+[node name="LeftWallCollision" type="CollisionShape2D" parent="WallsAndCeiling"]
+position = Vector2(-135, 0)
+shape = SubResource("RectangleShape2D_g3b4d")
+
+[node name="LeftWall" type="ColorRect" parent="WallsAndCeiling/LeftWallCollision"]
+offset_left = -10.0
+offset_top = -187.0
+offset_right = 10.0
+offset_bottom = 180.0
+
+[node name="CeilingCollision" type="CollisionShape2D" parent="WallsAndCeiling"]
+position = Vector2(0, -114)
+shape = SubResource("RectangleShape2D_068ri")
+
+[node name="ColorRect" type="ColorRect" parent="WallsAndCeiling/CeilingCollision"]
+offset_left = -166.0
+offset_top = -4.0
+offset_right = 172.0
+offset_bottom = 4.0
+
+[node name="CeilingArea" type="Area2D" parent="WallsAndCeiling"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallsAndCeiling/CeilingArea"]
+position = Vector2(2, -114)
+shape = SubResource("RectangleShape2D_f8ioj")
+
+[node name="LoseArea" type="Area2D" parent="."]
+position = Vector2(0, 171.515)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LoseArea"]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_2icfi")
+
+[node name="Paddle" parent="." instance=ExtResource("1_ogjtp")]
+position = Vector2(-8, 120)
+
+[node name="Ball" parent="." instance=ExtResource("2_rvfku")]
+position = Vector2(0, -200)
+
+[node name="CanvasLayer" parent="." instance=ExtResource("4_b2pk6")]
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="area_entered" from="Ball/BallArea" to="." method="_on_ball_area_area_entered"]
+[connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+
+[editable path="Paddle"]
+[editable path="Ball"]
+[editable path="CanvasLayer"]
